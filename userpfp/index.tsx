@@ -33,7 +33,7 @@ import "./userpfp.css";
 // Define the Vencord plugin
 export default definePlugin({
     name: "UserPFP",
-    authors: [{ name: "FoxStorm1", id: 789872551731527690n }],
+    authors: [{ name: "FoxStorm1", id: 789872551731527690n }, { name: "Coolesding", id: 406084422308331522n }],
     description: "Custom animated profile pictures without Discord nitro.",
     settingsAboutComponent: () => {
         return (
