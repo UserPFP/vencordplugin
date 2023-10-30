@@ -25,7 +25,6 @@ import { LazyComponent } from "@utils/react";
 import definePlugin from "@utils/types";
 import { findByCode } from "@webpack";
 import { Menu, Popout, useState } from "@webpack/common";
-import type { ReactNode } from "react";
 
 // Import the CSS file
 import "./userpfp.css";
@@ -37,7 +36,7 @@ export default definePlugin({
     description: "Custom animated profile pictures without Discord nitro.",
     settingsAboutComponent: () => {
         return (
-            <a href="https://dsc.gg/UserPFP">Request a PFP</a>
+            <a href="https://discord.com/invite/userpfp-1129784704267210844">Request a PFP</a>
         );
     }
 });
