@@ -37,7 +37,7 @@ export default definePlugin({
     description: "Custom animated profile pictures without Discord nitro.",
     settingsAboutComponent: () => {
         return (
-            <a href="https://discord.com/invite/userpfp-1129784704267210844">Request a PFP</a>
+            
         );
     }
 });
