@@ -18,7 +18,7 @@ let data = {
 const settings = definePluginSettings({
     preferNitro: {
         description:
-        "Which avatar to use if both default animated (Nitro) pfp and UserPFP avatars are present",
+            "Which avatar to use if both default animated (Nitro) pfp and UserPFP avatars are present",
         type: OptionType.SELECT,
         options: [
             { label: "UserPFP", value: false },
@@ -29,19 +29,25 @@ const settings = definePluginSettings({
 
 export default definePlugin({
     data,
+
     name: "UserPFP",
     description: "Allows you to use an animated avatar without Nitro",
     authors: [{ name: "nexpid", id: 853550207039832084n }, { name: "thororen", id: 848339671629299742n }],
-    required: true,
     settings,
     settingsAboutComponent: () => (
-        <Link href="https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp">
-            <b>SUBMIT YOUR OWN PFP HERE</b>
-        </Link>
+        <>
+            <Link href="https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp">
+                <b>Submit your own pfp here</b>
+            </Link>
+            <br></br>
+            <Link href="https://ko-fi.com/coolesding">
+                <b>Support UserPFP</b>
+            </Link>
+        </>
     ),
     patches: [
-        // default export patch
         {
+            // Normal Profiles
             find: "getUserAvatarURL:",
             replacement: [
                 {
