@@ -6,70 +6,68 @@
 
 import { definePluginSettings } from "@api/Settings";
 import { Link } from "@components/Link";
+import { Devs, EquicordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
-import { User } from "discord-types/general";
+import { User } from "@vencord/discord-types";
 
-const BASE_URL = "https://userpfp.github.io/UserPFP/source/data.json";
-
-let data = {
-    avatars: {} as Record<string, string>,
-};
-
+let data = { avatars: {} as Record<string, string> };
+const API_URL = "https://userpfp.github.io/UserPFP/source/data.json";
 const settings = definePluginSettings({
     preferNitro: {
-        description:
-            "Which avatar to use if both default animated (Nitro) pfp and UserPFP avatars are present",
+        description: "Which avatar to use if both default animated (Nitro) pfp and UserPFP avatars are present",
         type: OptionType.SELECT,
         options: [
             { label: "UserPFP", value: false },
             { label: "Nitro", value: true, default: true },
         ],
-    },
+    }
 });
 
 export default definePlugin({
     data,
-
     name: "UserPFP",
     description: "Allows you to use an animated avatar without Nitro",
-    authors: [{ name: "nexpid", id: 853550207039832084n }, { name: "thororen", id: 848339671629299742n }],
+    authors: [EquicordDevs.nexpid, Devs.thororen],
     settings,
     settingsAboutComponent: () => (
         <>
             <Link href="https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp">
-                <b>Submit your own pfp here</b>
+                <b>Submit your own PFP here!</b>
             </Link>
-            <br></br>
+            <br />
             <Link href="https://ko-fi.com/coolesding">
-                <b>Support UserPFP</b>
+                <b>Support UserPFP here!</b>
             </Link>
         </>
     ),
     patches: [
         {
-            // Normal Profiles
             find: "getUserAvatarURL:",
             replacement: [
                 {
                     match: /(getUserAvatarURL:)(\i),/,
                     replace: "$1$self.getAvatarHook($2),"
-                },
-                {
-                    match: /(getUserAvatarURL:\i\(\){return )(\i)}/,
-                    replace: "$1$self.getAvatarHook($2)}"
                 }
             ]
         }
     ],
-
     getAvatarHook: (original: any) => (user: User, animated: boolean, size: number) => {
         if (settings.store.preferNitro && user.avatar?.startsWith("a_")) return original(user, animated, size);
+        if (!data.avatars[user.id]) return original(user, animated, size);
 
-        return data.avatars[user.id] ?? original(user, animated, size);
+        const res = new URL(data.avatars[user.id]);
+        res.searchParams.set("animated", animated ? "true" : "false");
+        if (res && !animated) {
+            res.pathname = res.pathname.replaceAll(/\.gifv?/g, ".png");
+        }
+
+        return res.toString();
     },
-
     async start() {
-        const res = await fetch(BASE_URL);
-        if (res.ok) this.data = data = await res.json();
-    },
+        await fetch(API_URL)
+            .then(async res => {
+                if (res.ok) this.data = data = await res.json();
+            })
+            .catch(() => null);
+    }
 });
